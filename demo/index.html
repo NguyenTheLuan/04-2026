@@ -3,36 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Touch vs Click — Live Demo</title>
+  <title>Touch vs Click — Demo</title>
   <link rel="stylesheet" href="demo.css" />
 </head>
 <body>
-  <h1>Touch vs Click — Live Demo</h1>
-  <p>Open on a phone or DevTools device mode. Watch the log order.</p>
+  <header class="page-header">
+    <div class="page-header__inner">
+      <h1 class="page-title">Touch vs Click</h1>
+      <p class="page-lead">Left = try. Right = log. On a phone, tap the button and read order.</p>
+    </div>
+  </header>
 
-  <section>
-    <h2>1) Event log</h2>
-    <div class="row">
-      <button type="button" id="btn">Tap / Click me</button>
-      <button type="button" id="clear">Clear log</button>
-    </div>
-    <p class="hint">Touch events then <strong>click</strong> is common. Handlers on both can double-fire.</p>
-    <div id="log" aria-live="polite"></div>
-  </section>
+  <main class="page-main">
+    <div class="split">
+      <div class="split__demos">
+        <section class="panel">
+          <h2 class="panel__title">1. Tap</h2>
+          <p class="panel__lead">
+            We log the <strong>full</strong> common sequence:
+            <code>pointerdown</code>/<code>pointerup</code>,
+            <code>touchstart</code>/<code>touchend</code>/<code>touchcancel</code>,
+            <code>mousedown</code>/<code>mouseup</code>,
+            <code>click</code>
+            — many lines from <strong>one</strong> tap or mouse click (not the user repeating the action).
+          </p>
+          <button type="button" class="btn btn--primary" id="tap-button">Tap me</button>
+        </section>
 
-  <section>
-    <h2>2) Drag (<code>#knob</code> uses <code>touch-action: none</code> on the box)</h2>
-    <div id="dragBox" aria-label="drag area">
-      <div id="knob" role="button" tabindex="0">DRAG</div>
+        <section class="panel">
+          <h2 class="panel__title">2. Drag</h2>
+          <p class="panel__lead">While dragging, <code>pointermove</code> runs many times per second (we only log <code>pointerdown</code> / <code>pointerup</code> here so the log stays short).</p>
+          <div class="rail" id="drag-rail" aria-label="drag rail">
+            <div class="thumb" id="drag-thumb" tabindex="0">Drag</div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="split__log" aria-label="Event log">
+        <div class="log-shell">
+          <div class="log-head">
+            <span>Log</span>
+            <div class="log-head__actions">
+              <button type="button" class="btn btn--log-clear" id="log-clear">Clear</button>
+            </div>
+          </div>
+          <pre class="log-body" id="log-output" aria-live="polite"></pre>
+        </div>
+      </aside>
     </div>
-    <p class="hint">Second box: default <code>touch-action</code> — scroll may steal moves.</p>
-    <div class="row">
-      <label><input type="checkbox" id="usePointer" checked /> Pointer Events</label>
-    </div>
-    <div id="dragBox2">
-      <div id="knob2" class="pad">SCROLL?</div>
-    </div>
-  </section>
+  </main>
 
   <script src="demo.js"></script>
 </body>
