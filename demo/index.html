@@ -19,10 +19,12 @@
       <section>
         <h2>1. Tap</h2>
         <p>
-          Log prefix <code>[1 tap]</code>. Same <code>TAP_EVENT_TYPES</code> as section 2:
+          Log prefix <code>[1 tap]</code>. Listeners use <code>element.addEventListener(type, fn)</code> — same pattern for
+          <code>"click"</code> as for <code>"touchstart"</code>, etc. (see <code>demo.js</code>).
+          Same <code>TAP_EVENT_TYPES</code> as section 2:
           <code>pointerdown</code>/<code>pointerup</code>/<code>pointercancel</code>,
           <code>touchstart</code>/<code>touchend</code>/<code>touchcancel</code>,
-          <code>mousedown</code>/<code>mouseup</code>,
+          <code>mousedown</code>/<code>mouseup</code> (DOM <strong>mouse</strong> event types via <code>addEventListener</code> — not the HTML <code>onclick</code> attribute),
           <code>click</code>
           — many lines from <strong>one</strong> tap or click.
         </p>

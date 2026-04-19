@@ -30,8 +30,8 @@ const TAP_EVENT_TYPES = [
   "touchstart",
   "touchend",
   "touchcancel",
-  "mousedown",
-  "mouseup",
+  // "mousedown",
+  // "mouseup",
   "click",
 ];
 
