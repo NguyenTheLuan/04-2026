@@ -1,3 +1,5 @@
+/* Demo page: all layout / look lives here; HTML stays minimal. */
+
 :root {
   --bg: #f1f5f9;
   --surface: #fff;
@@ -34,147 +36,48 @@ code {
   border-radius: 4px;
 }
 
-.page-header {
+/* ---- Header ---- */
+header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   padding: 1rem 1.25rem;
-}
-
-.page-header__inner {
   max-width: 960px;
   margin: 0 auto;
 }
 
-.page-title {
+header h1 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
 }
 
-.page-lead {
+header > p {
   margin: 0.35rem 0 0;
   color: var(--muted);
   font-size: 0.9rem;
 }
 
-.page-main {
+/* ---- Main: two columns (activities | log) ---- */
+main {
+  display: grid;
+  grid-template-columns: 1fr minmax(260px, 36%);
+  gap: 1rem;
+  align-items: start;
   max-width: 960px;
   margin: 0 auto;
   padding: 1rem 1.25rem;
 }
 
-.split {
-  display: grid;
-  grid-template-columns: 1fr minmax(260px, 36%);
-  gap: 1rem;
-  align-items: start;
-}
-
-.split__demos {
+main > div:first-child {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   min-width: 0;
 }
 
-.split__log {
+main > aside {
   position: sticky;
   top: 0.75rem;
-}
-
-@media (max-width: 760px) {
-  .split {
-    grid-template-columns: 1fr;
-  }
-  .split__log {
-    position: static;
-  }
-  .log-body {
-    min-height: 180px;
-    max-height: 240px;
-  }
-}
-
-.panel {
-  background: var(--surface);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  padding: 1rem 1.15rem;
-}
-
-.panel__title {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
-.panel__lead {
-  margin: 0.35rem 0 0.75rem;
-  color: var(--muted);
-  font-size: 0.88rem;
-}
-
-.btn {
-  touch-action: manipulation;
-  font: inherit;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  user-select: none;
-}
-
-.btn--primary {
-  background: #0f172a;
-  color: #fff;
-}
-
-.btn--primary:hover {
-  background: #1e293b;
-}
-
-.btn--log-clear {
-  font-size: 0.72rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #64748b;
-  background: #334155;
-  color: #f1f5f9;
-}
-
-.rail {
-  position: relative;
-  height: 100px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: #dbeafe;
-  touch-action: none;
-}
-
-.thumb {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 10px;
-  width: 64px;
-  height: 40px;
-  border-radius: 8px;
-  background: #2563eb;
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-  cursor: grab;
-  touch-action: manipulation;
-}
-
-.thumb:active {
-  cursor: grabbing;
-}
-
-.log-shell {
   background: var(--surface);
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -182,7 +85,7 @@ code {
   overflow: hidden;
 }
 
-.log-head {
+main > aside > div:first-child {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -193,13 +96,25 @@ code {
   font-weight: 600;
 }
 
-.log-head__actions {
-  display: flex;
-  gap: 0.35rem;
+main > aside > div:first-child button {
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #64748b;
+  background: #334155;
+  color: #f1f5f9;
+  cursor: pointer;
 }
 
-.log-body {
+main > aside > div:first-child button:hover {
+  background: #475569;
+}
+
+#log-output {
   margin: 0;
+  display: block;
   min-height: min(400px, calc(100vh - 10rem));
   max-height: calc(100vh - 8rem);
   overflow: auto;
@@ -211,4 +126,89 @@ code {
   color: #86efac;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+@media (max-width: 760px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+
+  main > aside {
+    position: static;
+  }
+
+  #log-output {
+    min-height: 180px;
+    max-height: 240px;
+  }
+}
+
+/* ---- Sections (tap + drag) ---- */
+main section {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.15rem;
+}
+
+main section h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+main section > p {
+  margin: 0.35rem 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+#tap-button {
+  touch-action: manipulation;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  background: #0f172a;
+  color: #fff;
+}
+
+#tap-button:hover {
+  background: #1e293b;
+}
+
+/* ---- Drag rail ---- */
+#drag-rail {
+  position: relative;
+  height: 100px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #dbeafe;
+  touch-action: none;
+}
+
+#drag-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 10px;
+  width: 88px;
+  height: 40px;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+#drag-thumb:active {
+  cursor: grabbing;
 }

@@ -21,13 +21,12 @@ document.querySelector("#log-clear").addEventListener("click", () => {
 });
 
 // =============================================================================
-// 2) TAP — one user press+release, but the browser emits many different event names
+// 2) One shared list — button vs draggable thumb (same listeners, different gesture)
 // =============================================================================
-const tapButton = document.querySelector("#tap-button");
-
 const TAP_EVENT_TYPES = [
   "pointerdown",
   "pointerup",
+  "pointercancel",
   "touchstart",
   "touchend",
   "touchcancel",
@@ -36,52 +35,59 @@ const TAP_EVENT_TYPES = [
   "click",
 ];
 
-const onTapButtonEvent = (e) => {
-  const extra = e.pointerType ? " · " + e.pointerType : "";
-  log(e.type + extra);
+/** Logs every type in TAP_EVENT_TYPES; prefix tells which UI fired. */
+const attachTapFamilyLogger = (el, prefix) => {
+  const onEvt = (e) => {
+    const extra = e.pointerType ? " · " + e.pointerType : "";
+    log(prefix + e.type + extra);
+  };
+  TAP_EVENT_TYPES.forEach((type) => {
+    el.addEventListener(type, onEvt, { passive: true });
+  });
 };
-
-TAP_EVENT_TYPES.forEach((type) => {
-  tapButton.addEventListener(type, onTapButtonEvent, { passive: true });
-});
-
-// =============================================================================
-// 3) DRAG — lesson: many pointermove events while the pointer moves (not “one click”)
-// =============================================================================
-const dragRail = document.querySelector("#drag-rail");
-const dragThumb = document.querySelector("#drag-thumb");
-let dragOn = false;
-let dragStartX = 0;
-let dragStartLeft = 0;
 
 const clamp = (n, lo, hi) => (n < lo ? lo : n > hi ? hi : n);
 
-dragThumb.addEventListener("pointerdown", (e) => {
-  dragOn = true;
-  dragThumb.setPointerCapture(e.pointerId);
-  dragStartX = e.clientX;
-  dragStartLeft = dragThumb.offsetLeft;
-  log("pointerdown (drag)");
-});
+/** Horizontal drag; pointermove / touchmove are not logged (too noisy). */
+const setupHorizontalDrag = (rail, thumb) => {
+  let dragOn = false;
+  let dragStartX = 0;
+  let dragStartLeft = 0;
 
-dragThumb.addEventListener("pointermove", (e) => {
-  if (!dragOn) return;
-  const max = dragRail.clientWidth - dragThumb.clientWidth;
-  dragThumb.style.left =
-    clamp(dragStartLeft + (e.clientX - dragStartX), 0, max) + "px";
-  // pointermove fires very often — we do not log each one (keeps the log readable).
-});
+  thumb.addEventListener("pointerdown", (e) => {
+    dragOn = true;
+    thumb.setPointerCapture(e.pointerId);
+    dragStartX = e.clientX;
+    dragStartLeft = thumb.offsetLeft;
+  });
 
-const dragEnd = (e) => {
-  if (!dragOn) return;
-  dragOn = false;
-  try {
-    dragThumb.releasePointerCapture(e.pointerId);
-  } catch (_e) {
-    /* ignore */
-  }
-  log(e.type === "pointercancel" ? "pointercancel (drag)" : "pointerup (drag)");
+  thumb.addEventListener("pointermove", (e) => {
+    if (!dragOn) return;
+    const max = rail.clientWidth - thumb.clientWidth;
+    thumb.style.left =
+      clamp(dragStartLeft + (e.clientX - dragStartX), 0, max) + "px";
+  });
+
+  const end = (e) => {
+    if (!dragOn) return;
+    dragOn = false;
+    try {
+      thumb.releasePointerCapture(e.pointerId);
+    } catch (_e) {
+      /* ignore */
+    }
+  };
+
+  thumb.addEventListener("pointerup", end);
+  thumb.addEventListener("pointercancel", end);
 };
 
-dragThumb.addEventListener("pointerup", dragEnd);
-dragThumb.addEventListener("pointercancel", dragEnd);
+// --- 1) Tap (native button) ---
+const tapButton = document.querySelector("#tap-button");
+attachTapFamilyLogger(tapButton, "[1 tap] ");
+
+// --- 2) Same listeners + drag — compare [1 tap] vs [2 drag] (tap vs drag on thumb) ---
+const dragRail = document.querySelector("#drag-rail");
+const dragThumb = document.querySelector("#drag-thumb");
+attachTapFamilyLogger(dragThumb, "[2 drag] ");
+setupHorizontalDrag(dragRail, dragThumb);

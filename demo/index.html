@@ -1,58 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Touch vs Click — Demo</title>
   <link rel="stylesheet" href="demo.css" />
 </head>
+
 <body>
-  <header class="page-header">
-    <div class="page-header__inner">
-      <h1 class="page-title">Touch vs Click</h1>
-      <p class="page-lead">Left = try. Right = log. On a phone, tap the button and read order.</p>
-    </div>
+  <header>
+    <h1>Touch vs Click</h1>
+    <p>Left = try. Right = log.</p>
   </header>
 
-  <main class="page-main">
-    <div class="split">
-      <div class="split__demos">
-        <section class="panel">
-          <h2 class="panel__title">1. Tap</h2>
-          <p class="panel__lead">
-            We log the <strong>full</strong> common sequence:
-            <code>pointerdown</code>/<code>pointerup</code>,
-            <code>touchstart</code>/<code>touchend</code>/<code>touchcancel</code>,
-            <code>mousedown</code>/<code>mouseup</code>,
-            <code>click</code>
-            — many lines from <strong>one</strong> tap or mouse click (not the user repeating the action).
-          </p>
-          <button type="button" class="btn btn--primary" id="tap-button">Tap me</button>
-        </section>
-
-        <section class="panel">
-          <h2 class="panel__title">2. Drag</h2>
-          <p class="panel__lead">While dragging, <code>pointermove</code> runs many times per second (we only log <code>pointerdown</code> / <code>pointerup</code> here so the log stays short).</p>
-          <div class="rail" id="drag-rail" aria-label="drag rail">
-            <div class="thumb" id="drag-thumb" tabindex="0">Drag</div>
-          </div>
-        </section>
-      </div>
-
-      <aside class="split__log" aria-label="Event log">
-        <div class="log-shell">
-          <div class="log-head">
-            <span>Log</span>
-            <div class="log-head__actions">
-              <button type="button" class="btn btn--log-clear" id="log-clear">Clear</button>
-            </div>
-          </div>
-          <pre class="log-body" id="log-output" aria-live="polite"></pre>
+  <main>
+    <div>
+      <section>
+        <h2>1. Tap</h2>
+        <p>
+          Log prefix <code>[1 tap]</code>. Same <code>TAP_EVENT_TYPES</code> as section 2:
+          <code>pointerdown</code>/<code>pointerup</code>/<code>pointercancel</code>,
+          <code>touchstart</code>/<code>touchend</code>/<code>touchcancel</code>,
+          <code>mousedown</code>/<code>mouseup</code>,
+          <code>click</code>
+          — many lines from <strong>one</strong> tap or click.
+        </p>
+        <button type="button" id="tap-button">Tap me</button>
+      </section>
+      <section>
+        <h2>2. Drag (same listeners)</h2>
+        <p>
+          Prefix <code>[2 drag]</code>. The thumb uses the <strong>same</strong> listeners as section 1, plus <code>pointermove</code> for position (not logged).
+          <strong>Tap</strong> the thumb once, then <strong>drag</strong> it — compare to <code>[1 tap]</code> (often <code>click</code> changes or disappears after a real drag).
+        </p>
+        <div id="drag-rail" aria-label="Drag rail">
+          <div id="drag-thumb" tabindex="0">Tap or drag</div>
         </div>
-      </aside>
+      </section>
     </div>
+    <aside aria-label="Event log">
+      <div>
+        <span>Log</span>
+        <button type="button" id="log-clear">Clear</button>
+      </div>
+      <pre id="log-output" aria-live="polite"></pre>
+    </aside>
   </main>
 
   <script src="demo.js"></script>
 </body>
+
 </html>
