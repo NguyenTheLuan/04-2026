@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Touch vs Click — Live Demo</title>
+  <link rel="stylesheet" href="demo.css" />
+</head>
+<body>
+  <h1>Touch vs Click — Live Demo</h1>
+  <p>Open on a phone or DevTools device mode. Watch the log order.</p>
+
+  <section>
+    <h2>1) Event log</h2>
+    <div class="row">
+      <button type="button" id="btn">Tap / Click me</button>
+      <button type="button" id="clear">Clear log</button>
+    </div>
+    <p class="hint">Touch events then <strong>click</strong> is common. Handlers on both can double-fire.</p>
+    <div id="log" aria-live="polite"></div>
+  </section>
+
+  <section>
+    <h2>2) Drag (<code>#knob</code> uses <code>touch-action: none</code> on the box)</h2>
+    <div id="dragBox" aria-label="drag area">
+      <div id="knob" role="button" tabindex="0">DRAG</div>
+    </div>
+    <p class="hint">Second box: default <code>touch-action</code> — scroll may steal moves.</p>
+    <div class="row">
+      <label><input type="checkbox" id="usePointer" checked /> Pointer Events</label>
+    </div>
+    <div id="dragBox2">
+      <div id="knob2" class="pad">SCROLL?</div>
+    </div>
+  </section>
+
+  <script src="demo.js"></script>
+</body>
+</html>
